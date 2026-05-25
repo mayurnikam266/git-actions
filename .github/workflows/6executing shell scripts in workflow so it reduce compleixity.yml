@@ -1,0 +1,20 @@
+
+name: Executing script of commands to reduce compleixity
+on: push
+
+
+jobs:
+  ascii_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: List Current Files
+        run: ls -ltra
+
+        # make sure to add execute permissions to script 
+      - name: Run ASCII Art Script
+        run: |
+          chmod +x ascii-script.sh
+          ./ascii-script.sh
