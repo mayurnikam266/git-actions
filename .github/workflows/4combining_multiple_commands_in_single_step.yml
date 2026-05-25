@@ -1,4 +1,4 @@
-name: My First Workflow
+name: combining multiple commands in single step
 on: push
 jobs:
   first_job:
