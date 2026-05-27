@@ -1,0 +1,66 @@
+name : Multiple Jobs with upload and download workflows and needs for flow
+on:
+    push:
+        branches:
+            - main
+jobs:
+    build_job_1:
+        runs-on: ubuntu-latest 
+        steps:
+            - name: Checkout repo
+              uses: actions/checkout@v4
+            
+            - name: Install cosway
+              run: sudo apt-get upadate && sudo apt-get install cowsay -y
+
+            - name: generate ascii for dragon
+              run: cosway -f dragon "Hello from mayur" > dragon.txt
+            
+            - name: Display dragon.txt
+              run: cat dragon.txt
+            
+            - name: Pause for 30 seconds 
+              run: sleep 30
+            
+            - name: upload dragon.txt artifact
+              uses: actions/upload-artifact@v4
+              with: 
+                name: dragon-artifact
+                path: dragon.txt
+    
+    test_job2:
+        needs: build_job_1
+        runs-on: ubuntu-latest
+        
+        steps:
+            - name: Pause for 10 seconds
+              run: sleep 10
+
+            - name: Download artifact
+              uses: actions/download-artifact@v4
+              with: 
+                name: dragon-artifact
+            
+            - name: Verify dragon.txt
+              run: cat dragon.txt
+
+    
+    deploy_job_3:
+        needs: test_job2
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Download artifact
+              uses: actions/download-artifact@v4
+              with: 
+                name: dragon-artifact
+
+            - name: Display dragon.txt
+              run: cat dragon.txt
+            
+            - name: Simulate Deployment
+              run: echo "deploying dragon.txt ..."
+
+            
+
+            
